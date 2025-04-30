@@ -1,0 +1,22 @@
+openlaw:
+  oc: ${OPENLAW_OC:test}
+  type: JSON
+
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+  ai:
+    mcp:
+      server:
+        name: openlaw-mcp
+        version: 1.0.0
+        type: SYNC
+        stdio: true
+        tool-change-notification: true
+        resource-change-notification: true
+        prompt-change-notification: true
+
+logging:
+  pattern:
+    console:
