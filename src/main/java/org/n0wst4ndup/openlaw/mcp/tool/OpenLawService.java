@@ -104,7 +104,7 @@ public class OpenLawService {
 		if (target.equals("ordin")) convertType = new TypeReference<List<OrdinSearch>>() {};
 		
 		var dataList = convertType != null 
-				? mapper.convertValue(searchDTO.getDatas(), convertType) : "No search results";
+				? mapper.convertValue(searchDTO.getDatas(), convertType) : "Target not found";
 		
     int start = display != null ? display*(searchDTO.getPage()-1) : searchDTO.getNumOfRows()*(searchDTO.getPage()-1);
     int end = start + searchDTO.getNumOfRows();
@@ -114,7 +114,7 @@ public class OpenLawService {
             start, 
             end, 
             searchDTO.getTotalCnt(), 
-            dataList);
+            dataList != null ? dataList : "No search results");
 	}
 
   /**
