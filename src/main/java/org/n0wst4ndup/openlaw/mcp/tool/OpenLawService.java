@@ -91,7 +91,9 @@ public class OpenLawService {
 		if (page != null) uri.queryParam("page", page);
 		
 		// Get Request
-		SearchDTO searchDTO = (SearchDTO) restClient.get().uri(uri.build().toUriString()).retrieve().body(DynamicJsonDTO.class).getJson();
+		DynamicJsonDTO response = restClient.get().uri(uri.build().toUriString()).retrieve().body(DynamicJsonDTO.class);
+		if (response == null) throw new RestClientException("API 응답이 null입니다.");
+		SearchDTO searchDTO = (SearchDTO) response.getJson();
 
 		// Data Processing for Host
 		TypeReference<?> convertType = null;
