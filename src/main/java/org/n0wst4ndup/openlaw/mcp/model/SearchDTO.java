@@ -14,19 +14,25 @@ import lombok.Getter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchDTO implements JsonDTO {
 	
+  /** 검색 대상 */
 	@JsonProperty("target")
 	private String target;
+  /** 검색 영역 ()*/
 	@JsonProperty("section")
 	private String section;
+  /** 검색 키워드 */
 	@JsonProperty("키워드")
 	private String query;
+  /** 검색 결과 총 개수 */
 	@JsonProperty("totalCnt")
 	private Integer totalCnt;
+  /** 검색 결과 수 */
 	@JsonProperty("numOfRows")
 	private Integer numOfRows;
+  /** 검색 결과 페이지 번호 */
 	@JsonProperty("page")
 	private Integer page;
-
+  /** 검색 결과 데이터 */
 	private ArrayNode datas;
 	
 	@JsonAnySetter

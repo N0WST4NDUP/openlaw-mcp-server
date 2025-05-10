@@ -61,10 +61,10 @@ public class OpenLawService {
 	 * @apiNote -
 	 * */
 	@Tool(description = "국가법령정보 Open API를 통해 법령, 행정규칙, 자치법규를 검색합니다.")
-	public String law_search(@ToolParam(description = "서비스대상(법령:law/행정규칙:admrul/자치법규:ordin)", required = true) 
+	public String law_search(@ToolParam(description = "서비스대상(law:법령/admrul:행정규칙/ordin:자치법규)", required = true) 
 							 String target,
 							 
-							 @ToolParam(description = "검색범위(1:법령명/2:본문, default=1)", required = false)
+							 @ToolParam(description = "검색범위(1:제목/2:본문, default=1)", required = false)
 							 Integer search,
 							 
 							 @ToolParam(description = "검색범위에서 검색을 원하는 질의(e.g. 대한민국헌법)\n"
@@ -93,8 +93,8 @@ public class OpenLawService {
 		// Get Request
 		DynamicJsonDTO response = restClient.get().uri(uri.build().toUriString()).retrieve().body(DynamicJsonDTO.class);
 		if (response == null) throw new RestClientException("API 응답이 null입니다.");
-		SearchDTO searchDTO = (SearchDTO) response.getJson();
-
+		SearchDTO searchDTO = (SearchDTO) response.getJson();;
+    
 		// Data Processing for Host
 		TypeReference<?> convertType = null;
 		
@@ -103,9 +103,13 @@ public class OpenLawService {
 		if (target.equals("ordin")) convertType = new TypeReference<List<OrdinSearch>>() {};
 		
 		var dataList = convertType != null 
-				? mapper.convertValue(searchDTO.getDatas(), convertType) : null;
+				? mapper.convertValue(searchDTO.getDatas(), convertType) : "No search results";
 		
-		return dataList != null ? dataList.toString() : "No search results";
+		return String.format("""
+              query: %s
+              count: %d-%d/%d
+              result: %s
+            """, searchDTO.getQuery(), searchDTO.getNumOfRows()*(searchDTO.getPage()-1)+1, searchDTO.getNumOfRows()*searchDTO.getPage(), searchDTO.getTotalCnt(), dataList);
 	}
 
   /**
