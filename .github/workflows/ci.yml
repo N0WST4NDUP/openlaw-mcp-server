@@ -24,6 +24,7 @@ jobs:
       uses: docker/metadata-action@v5.7.0
       with:
         images: n0wst4ndup/openlaw-mcp
+        tags: latest
     -
       name: Build and Push
       uses: docker/build-push-action@v6.16.0
