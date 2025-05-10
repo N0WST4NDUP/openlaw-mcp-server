@@ -51,7 +51,8 @@ Spring Boot 기반 Model Context Protocol(MCP) 서버로 국가법령정보 Open
 
 ```bash
 # Git Clone
-
+git clone https://github.com/N0WST4NDUP/openlaw-mcp-server.git
+cd openlaw-mcp-server
 
 # Image Build
 docker build -t n0wst4ndup/openlaw-mcp .
