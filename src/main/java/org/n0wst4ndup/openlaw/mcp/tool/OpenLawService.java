@@ -121,7 +121,12 @@ public class OpenLawService {
    * 개발 전
    * @return {@link null}
    */
-	public String law_service() {	
+	public String law_service() {
+    // Param Setting
+		UriComponentsBuilder uri = 
+      UriComponentsBuilder
+        .fromPath("/DRF/lawService.do");
+      
 		return null;
 	}
 
