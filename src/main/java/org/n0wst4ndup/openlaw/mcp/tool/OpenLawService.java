@@ -121,6 +121,7 @@ public class OpenLawService {
    * 개발 전
    * @return {@link null}
    */
+  @Tool(description = "국가법령정보 Open API를 통해 법령, 행정규칙, 자치법규의 상세 검색합니다.")
 	public String law_service() {
     // Param Setting
 		UriComponentsBuilder uri = 
