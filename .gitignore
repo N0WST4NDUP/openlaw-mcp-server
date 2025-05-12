@@ -34,6 +34,7 @@ build/
 
 ### Cursor ###
 .cursor/
+.roo/
 
 # Added by Claude Task Master
 # Logs
@@ -45,8 +46,10 @@ yarn-error.log*
 dev-debug.log
 # Dependency directories
 node_modules/
+
 # Environment variables
 .env
+
 # Editor directories and files
 .vscode
 *.suo
@@ -54,8 +57,13 @@ node_modules/
 *.njsproj
 *.sln
 *.sw?
+
 # OS specific
 .DS_Store
+
 # Task files
 tasks.json
 tasks/ 
+.taskmasterconfig
+.windsurfrules
+.roomodes
