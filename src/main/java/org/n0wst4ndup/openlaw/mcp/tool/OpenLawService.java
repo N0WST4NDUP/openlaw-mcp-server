@@ -61,22 +61,23 @@ public class OpenLawService {
 	 * @apiNote -
 	 * */
 	@Tool(description = "국가법령정보 Open API를 통해 법령, 행정규칙, 자치법규를 검색합니다.")
-	public String law_search(@ToolParam(description = "서비스대상(법령:law/행정규칙:admrul/자치법규:ordin)", required = true) 
-							 String target,
+	public String law_search(
+                  @ToolParam(description = "서비스대상(law:법령/admrul:행정규칙/ordin:자치법규)", required = true) 
+							    String target,
 							 
-							 @ToolParam(description = "검색범위(1:법령명/2:본문, default=1)", required = false)
-							 Integer search,
+							    @ToolParam(description = "검색범위(1:제목/2:본문, default=1)", required = false)
+							    Integer search,
 							 
-							 @ToolParam(description = "검색범위에서 검색을 원하는 질의(e.g. 대한민국헌법)\n"
-							 						+ "복수질의의 경우 '+'를 사용해 검색(e.g. 고용+산업)", required = false)
-							 String query,
+							    @ToolParam(description = "검색범위에서 검색을 원하는 질의(e.g. 대한민국헌법)\n"
+							 						              + "복수질의의 경우 '+'를 사용해 검색(e.g. 고용+산업)", required = false)
+							    String query,
 							 
-							 @ToolParam(description = "검색 결과 개수(default=20 max=100)", required = false)
-							 Integer display,
+							    @ToolParam(description = "검색 결과 개수(default=20 max=100)", required = false)
+							    Integer display,
 							 
-							 @ToolParam(description = "검색 결과 페이지(default=1)", required = false) 
-							 Integer page) 
-	{	
+							    @ToolParam(description = "검색 결과 페이지(default=1)", required = false) 
+							    Integer page
+                  ) {	
 		// Param Setting
 		UriComponentsBuilder uri = 
 			UriComponentsBuilder
@@ -91,8 +92,10 @@ public class OpenLawService {
 		if (page != null) uri.queryParam("page", page);
 		
 		// Get Request
-		SearchDTO searchDTO = (SearchDTO) restClient.get().uri(uri.build().toUriString()).retrieve().body(DynamicJsonDTO.class).getJson();
-
+		DynamicJsonDTO response = restClient.get().uri(uri.build().toUriString()).retrieve().body(DynamicJsonDTO.class);
+		if (response == null) throw new RestClientException("API 응답이 null입니다.");
+		SearchDTO searchDTO = (SearchDTO) response.getJson();;
+    
 		// Data Processing for Host
 		TypeReference<?> convertType = null;
 		
@@ -101,16 +104,29 @@ public class OpenLawService {
 		if (target.equals("ordin")) convertType = new TypeReference<List<OrdinSearch>>() {};
 		
 		var dataList = convertType != null 
-				? mapper.convertValue(searchDTO.getDatas(), convertType) : null;
+				? mapper.convertValue(searchDTO.getDatas(), convertType) : "Target not found";
 		
-		return dataList != null ? dataList.toString() : "No search results";
+    int start = display != null ? display*(searchDTO.getPage()-1) : searchDTO.getNumOfRows()*(searchDTO.getPage()-1);
+    int end = start + searchDTO.getNumOfRows();
+
+		return String.format("query: %s, scope: %d-%d/%d, result: %s", 
+            searchDTO.getQuery(), 
+            start, 
+            end, 
+            searchDTO.getTotalCnt(), 
+            dataList != null ? dataList : "No search results");
 	}
 
   /**
    * 개발 전
    * @return {@link null}
    */
-	public String law_service() {	
+	public String law_service() {
+    // Param Setting
+		UriComponentsBuilder uri = 
+      UriComponentsBuilder
+        .fromPath("/DRF/lawService.do");
+      
 		return null;
 	}
 
